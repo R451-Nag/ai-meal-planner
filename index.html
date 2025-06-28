@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Meal Planner</title>
+  <link rel="stylesheet" href="style/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    #dailyTip {
+      font-size: 1.2rem;
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    #dailyTip.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-icons">
+    <span class="icon icon1">🍎</span>
+    <span class="icon icon2">🥦</span>
+    <span class="icon icon3">🧠</span>
+    <span class="icon icon4">🍞</span>
+  </div>
+  <header class="navbar">
+    <div class="logo">
+      <span>🥗 Nutri Mind</span>
+    </div>
+    <nav class="navbar-right">
+      <a href="#">🏠 Home</a>
+      <a href="#features">✨ Features</a>
+      <a href="#how-it-works">⚙️ How It Works</a>
+      <a href="#testimonials">💬 Testimonials</a>
+      <a href="bmi.html">BMI Calculator</a>
+      <a href="dashboard.html">📊 Dashboard</a>
+      <a href="#about">ℹ️ About</a>
+      <!-- Add this to your navigation in index.html -->
+<a href="weekly-plan.html">📅 Weekly Plan</a>
+      <button id="login-btn" class="cta">Login</button>
+      
+      <span id="dark-mode-toggle">🌙</span>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Eat Smart, Live Better</h1>
+      <p>Your personalized AI-powered meal planner</p>
+      <div class="daily-tip" id="dailyTip">
+        💧 Stay hydrated! Drink at least 8 glasses of water daily.
+      </div>
+      <a href="select-plan.html" class="primary-btn">Generate Meal Plan</a>
+    </div>
+    <div class="hero-image">
+      <img src="assets/float2.jpeg" alt="Meal" class="floating-meal"/>
+    </div>
+  </section>
+  <div class="chatbot-btn pulse" id="chatbotToggle">
+  <div class="chatbot-icon">💬</div>
+  <div class="notification-badge hidden">1</div>
+</div>
+
+<div class="chatbot-container hidden" id="chatbotContainer">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">AI</div>
+    <div>
+      <h3>NutriMind Assistant</h3>
+      <p class="status">Online</p>
+    </div>
+    <button class="close-chatbot" id="closeChatbot">×</button>
+  </div>
+  
+  <div class="chatbot-messages" id="chatbotMessages">
+    <div class="message bot-message">
+      Hello! I'm your nutrition assistant. Ask me about meal plans, recipes, or nutrition tips!
+    </div>
+    <div class="typing-indicator hidden" id="typingIndicator">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+  </div>
+  
+  <div class="chatbot-input">
+    <input type="text" id="chatbotInput" placeholder="Ask about nutrition...">
+    <button id="sendChatbotMessage">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M22 2L11 13"></path>
+        <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+
+
+  <section class="features" id="features">
+    <h2>Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <img src="assets/meal.png" alt="Meals Icon" class="feature-icon">
+        <h3>🍽️ Personalized Meals</h3>
+        <p>Get meals tailored to your health goals, dietary needs, and taste preferences using AI suggestions.</p>
+      </div>
+      <div class="feature-card">
+        <img src="assets/kcal.png" alt="Calories Icon" class="feature-icon">
+        <h3>💪 Track Calories</h3>
+        <p>Monitor your daily intake and stay on track with your fitness or weight goals effortlessly.</p>
+      </div>
+      <div class="feature-card">
+        <img src="assets/ai meal.png" alt="AI Icon" class="feature-icon">
+        <h3>🧠 AI Suggestions</h3>
+        <p>Let our smart engine analyze your inputs and recommend optimal meal combinations every day.</p>
+      </div>
+      <div class="feature-card">
+        <img src="assets/calendar.png" alt="Calendar Icon" class="feature-icon">
+        <h3>🗓️ Weekly Plans</h3>
+        <p>Plan your meals for the entire week with a balanced nutritional approach and minimal repetition.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works" id="how-it-works">
+    <h2 class="section-title">How It Works</h2>
+    <div class="how-steps card-container">
+      <div class="how-card">
+        <i class="fas fa-sliders-h how-icon"></i>
+        <h3>Choose Preferences</h3>
+        <p>Select your dietary needs, taste preferences, and health goals to personalize your journey.</p>
+      </div>
+      <div class="how-card">
+        <i class="fas fa-robot how-icon"></i>
+        <h3>AI Generates Meals</h3>
+        <p>Advanced AI creates nutritious and tasty meal plans tailored to your preferences.</p>
+      </div>
+      <div class="how-card">
+        <i class="fas fa-chart-line how-icon"></i>
+        <h3>Track & Save</h3>
+        <p>Track calories, progress, and save your favorite meal plans for reuse.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials" class="testimonials">
+    <h2 class="section-title">What Users Say</h2>
+    <div class="testimonial-cards">
+      <div class="testimonial-card">
+        <p>"This planner helped me eat healthier without stress. AI suggestions are always on point!"</p>
+        <h4>— Priya S., Nutrition Enthusiast</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"Perfect for busy professionals. I just input my goals and get meals I love every week."</p>
+        <h4>— Rohan K., Software Engineer</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"Tracking calories has never been easier. Plus, the interface is beautiful and intuitive!"</p>
+        <h4>— Meera T., Fitness Coach</h4>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <h2 class="section-title">About AI Meal Planner</h2>
+    <div class="about-content">
+      <p>AI Meal Planner is your intelligent assistant for crafting personalized, balanced, and delicious meal plans. Our mission is to make healthy eating effortless for everyone.</p>
+      <p>Powered by advanced AI and nutrition science, we help you align your food with your fitness, lifestyle, and preferences—no more guesswork, just smart eating.</p>
+    </div>
+  </section>
+
+  
+
+  <!-- ===================== Login Modal ===================== -->
+  <div id="login-modal" class="login-modal hidden">
+    <div class="login-card">
+      <span class="close-btn" id="close-login">&times;</span>
+      <h2>Login</h2>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit" class="primary-btn">Sign In</button>
+      </form>
+      <div class="dark-mode-toggle-container">
+        <label for="modal-dark-toggle">🌙</label>
+        <input type="checkbox" id="modal-dark-toggle" />
+      </div>
+      <p style="margin-top: 20px; text-align: center;">
+        Don't have an account?
+        <button id="open-register" style="color: #4ade80; background: none; border: none; cursor: pointer; text-decoration: underline;">
+          Register
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <!-- ===================== Register Modal ===================== -->
+  <div id="register-modal" class="login-modal hidden">
+    <div class="login-card">
+      <span class="close-btn" id="close-register">&times;</span>
+      <h2>Register</h2>
+      <form id="registerForm">
+        <input type="text" name="name" placeholder="Name" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit" class="primary-btn">Create Account</button>
+      </form>
+      <div class="dark-mode-toggle-container">
+        <label for="modal-dark-toggle-register">🌙</label>
+        <input type="checkbox" id="modal-dark-toggle-register" />
+      </div>
+      <p style="margin-top: 20px; text-align: center;">
+        Already have an account?
+        <button id="back-to-login" style="color: #4ade80; background: none; border: none; cursor: pointer; text-decoration: underline;">
+          Login
+        </button>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const tips = [
+      "🥗 Eat a variety of colorful fruits and vegetables.",
+      "🚪 Walk at least 30 minutes every day.",
+      "🧘‍♀️ Practice mindfulness or meditation for 10 mins.",
+      "🍎 Avoid processed foods and sugary drinks.",
+      "🛌 Get at least 7-8 hours of sleep every night.",
+      "🏋️‍♀️ Do light exercise to stay active and boost mood."
+    ];
+    let currentTip = 0;
+    const tipElement = document.getElementById("dailyTip");
+    function rotateTip() {
+      tipElement.classList.remove("visible");
+      setTimeout(() => {
+        currentTip = (currentTip + 1) % tips.length;
+        tipElement.innerText = tips[currentTip];
+        tipElement.classList.add("visible");
+      }, 500);
+    }
+    tipElement.classList.add("visible");
+    setInterval(rotateTip, 5000);
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Chatbot toggle
+  const chatbotToggle = document.getElementById('chatbotToggle');
+  const chatbotContainer = document.getElementById('chatbotContainer');
+  const closeChatbot = document.getElementById('closeChatbot');
+
+  // Toggle chatbot visibility
+  chatbotToggle.addEventListener('click', function() {
+    chatbotContainer.classList.toggle('visible');
+    chatbotContainer.classList.toggle('hidden');
+    // Remove pulse animation when opened
+    if (chatbotContainer.classList.contains('visible')) {
+      chatbotToggle.classList.remove('pulse');
+    }
+  });
+
+  // Close chatbot
+  closeChatbot.addEventListener('click', function() {
+    chatbotContainer.classList.remove('visible');
+    chatbotContainer.classList.add('hidden');
+  });
+
+  // Message handling
+  async function sendMessage() {
+    const input = document.getElementById('chatbotInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    // Add user message
+    addMessage(message, 'user');
+    input.value = '';
+    
+    // Show typing indicator
+    const typingIndicator = document.getElementById('typingIndicator');
+    typingIndicator.classList.remove('hidden');
+    
+    // Simulate thinking delay
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+    
+    // Hide typing indicator
+    typingIndicator.classList.add('hidden');
+    
+    // Get and show bot response
+    const response = getBotResponse(message);
+    addMessage(response, 'bot');
+    
+    // Auto-scroll to bottom
+    const messagesDiv = document.getElementById('chatbotMessages');
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // Helper function to add messages
+  function addMessage(text, sender) {
+    const messagesDiv = document.getElementById('chatbotMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', `${sender}-message`);
+    messageDiv.textContent = text;
+    messagesDiv.appendChild(messageDiv);
+    
+    // Auto-scroll
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // Event listeners for sending messages
+  document.getElementById('sendChatbotMessage').addEventListener('click', sendMessage);
+  document.getElementById('chatbotInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  // Sample responses
+  function getBotResponse(message) {
+    const lowerMsg = message.toLowerCase();
+    
+    const responses = {
+  // Expanded Greetings
+  'hi|hello|hey|hi there|hey there|greetings|what\'s up|yo': "Hello! I'm your NutriMind Assistant. Ask me about:\n• Food nutrition facts\n• Meal planning\n• Diet comparisons\n• Healthy recipes\nHow can I help you today?",
+  
+  // Macronutrients (Expanded)
+  'protein|proteins': "Top protein sources:\n🥩 Animal:\n• Chicken breast (31g/100g)\n• Salmon (22g/3oz)\n• Eggs (6g/large)\n🌱 Plant:\n• Lentils (18g/cup)\n• Tofu (10g/½ cup)\n• Chickpeas (15g/cup)\nHow much protein do you need daily?",
+  'carbs|carbohydrates': "Carbohydrate guide:\n✅ Good carbs:\n• Whole grains\n• Fruits\n• Vegetables\n❌ Limit:\n• Refined sugars\n• White flour\n• Processed snacks\nAim for 45-65% of daily calories",
+  'fats|healthy fats': "Healthy fat sources:\n• Avocados\n• Nuts & seeds\n• Olive oil\n• Fatty fish\n• Nut butters\nLimit saturated fats to <10% of calories",
+  'fiber|dietary fiber': "High-fiber foods (25-38g daily needed):\n• Beans (15g/cup)\n• Berries (8g/cup)\n• Whole grains\n• Broccoli\n• Chia seeds (10g/oz)",
+
+  // Micronutrients (New)
+  'vitamin c|vit c': "Best Vitamin C sources:\n• Oranges (70mg)\n• Bell peppers (95mg)\n• Kiwi (64mg)\n• Strawberries (59mg/cup)\n• Broccoli (81mg/cup)",
+  'iron|anemia': "Iron-rich foods:\n🍖 Heme iron (better absorbed):\n• Red meat\n• Organ meats\n• Shellfish\n🌱 Non-heme iron:\n• Spinach\n• Lentils\n• Fortified cereals\n💡 Tip: Pair with vitamin C for better absorption",
+  'calcium|bone health': "Calcium sources beyond dairy:\n• Kale (94mg/cup)\n• Almonds (76mg/oz)\n• Sardines (325mg/3oz)\n• Tofu (434mg/½ cup)\n• Fortified plant milks",
+
+  // Expanded Food Categories
+  // Fruits
+  'apple|apples': "Apple nutrition (medium):\n• Calories: 95\n• Fiber: 4g\n• Vitamin C: 14% DV\n• Antioxidants in skin\n\"An apple a day\" has some truth!",
+  'avocado|avocados': "Avocado benefits:\n• Healthy fats (15g/half)\n• Fiber (7g)\n• Potassium (more than bananas!)\n• Versatile in meals",
+  'citrus|oranges|lemons|limes': "Citrus fruits provide:\n• Vitamin C (70-90mg/fruit)\n• Fiber\n• Antioxidants\n• Hydration\nGreat for immune support!",
+  
+  // Vegetables (Expanded)
+  'carrot|carrots': "Carrot benefits:\n• Beta-carotene (vitamin A)\n• Fiber\n• Low calorie (50cal/cup)\n• Crunchy snack when raw",
+  'tomato|tomatoes': "Tomato nutrition:\n• Lycopene (antioxidant)\n• Vitamin C\n• Low calorie\n• Best absorbed when cooked",
+  'garlic|garlic benefits': "Garlic health perks:\n• Allicin compound (immune support)\n• May help heart health\n• Antimicrobial properties\n• Use fresh for maximum benefits",
+
+  // Grains (Expanded)
+  'oats|oatmeal': "Oats benefits:\n• Soluble fiber (4g/½ cup)\n• Helps lower cholesterol\n• Sustained energy\n• Versatile base for meals",
+  'whole wheat|whole grain': "Whole grains provide:\n• Fiber\n• B vitamins\n• Minerals (iron, magnesium)\n• Choose 100% whole grain products",
+  'pasta|noodles': "Healthier pasta options:\n• Whole wheat (+fiber)\n• Legume-based (+protein)\n• Vegetable noodles (zucchini, carrot)\n• Control portion sizes (1/2 cup dry)",
+
+  // Proteins (Expanded)
+  'egg|eggs': "Egg nutrition (large):\n• Calories: 70\n• Protein: 6g\n• Vitamin D\n• Choline (brain health)\n• Versatile in cooking",
+  'tofu|soy': "Tofu benefits:\n• Complete protein\n• Iron\n• Calcium (if calcium-set)\n• Absorbs flavors well\n• 80cal/3oz",
+  'nuts|nut mix|trail mix': "Nut nutrition (per oz):\n• Almonds: 6g protein\n• Walnuts: Omega-3s\n• Cashews: Iron\n• Pistachios: Fiber\n• Portion control needed (160-200cal/oz)",
+
+  // Diet Types (New)
+  'keto|ketogenic': "Keto diet basics:\n• 70-80% fats\n• 20-25% protein\n• <5% carbs\n• Focus on:\n  - Avocados\n  - Meat/fish\n  - Low-carb veggies\n  - Nuts/seeds",
+  'vegan|plant-based': "Vegan nutrition focus:\n• Protein: Tofu, tempeh, legumes\n• Vitamin B12: Fortified foods/supplements\n• Iron: Pair with vitamin C\n• Omega-3s: Flax, chia, walnuts",
+  'mediterranean diet': "Mediterranean diet staples:\n• Olive oil\n• Fish\n• Whole grains\n• Vegetables\n• Nuts\n• Moderate wine\n• Limited red meat",
+  
+  // Cooking & Prep (New)
+  'healthy cooking|meal prep': "Healthy cooking tips:\n1. Steam/sauté > deep fry\n2. Use herbs/spices > salt\n3. Prep veggies in advance\n4. Cook extra for leftovers\n5. Store properly (glass containers best)",
+  'oil|cooking oil': "Oil smoke points:\n• High heat: Avocado, peanut\n• Medium heat: Olive, coconut\n• Low heat: Flaxseed, walnut\n• Avoid reused/reheated oils",
+  'grilling|bbq': "Healthier grilling tips:\n• Marinate meats (reduces HCAs)\n• Grill veggies/fruits too\n• Avoid charring\n• Clean grill grates\n• Choose lean cuts",
+
+  // Health Conditions (New)
+  'heart healthy|cholesterol': "Heart-healthy foods:\n• Oats\n• Fatty fish\n• Nuts\n• Olive oil\n• Berries\n• Dark leafy greens\nAim for 25-30g fiber daily",
+  'blood pressure|hypertension': "BP-lowering foods:\n• Beets\n• Leafy greens\n• Berries\n• Garlic\n• Dark chocolate (85%+)\n• Reduce sodium to <1500mg",
+  'gut health|probiotics': "Gut-friendly foods:\n• Yogurt/kefir\n• Sauerkraut\n• Kimchi\n• Miso\n• Jerusalem artichokes\n• Aim for 25-30g fiber daily",
+
+  // Timing & Habits (New)
+  'intermittent fasting|fasting': "IF approaches:\n• 16:8 (16hr fast)\n• 5:2 (2 low-cal days)\n• Eat-Stop-Eat (24hr 1-2x/week)\n• Stay hydrated during fasts",
+  'post workout|recovery': "Post-workout nutrition:\n• Protein (20-40g)\n• Carbs (2:1 ratio to protein)\n• Hydration\n• Examples:\n  - Greek yogurt + fruit\n  - Protein shake\n  - Chicken + sweet potato",
+  'sleep|better sleep': "Foods for better sleep:\n• Tart cherry juice\n• Almonds\n• Turkey\n• Chamomile tea\n• Bananas\n• Avoid caffeine after 2pm",
+
+  // Supplements (New)
+  'vitamin d|sunshine vitamin': "Vitamin D facts:\n• Fatty fish best source\n• Fortified foods\n• Sunshine (15-30 min/day)\n• Many need supplements (1000-2000 IU)",
+  'magnesium|muscle cramps': "Magnesium sources:\n• Dark leafy greens\n• Nuts/seeds\n• Whole grains\n• Dark chocolate\n• May help with:\n  - Sleep\n  - Muscle cramps\n  - Stress",
+  'probiotic|gut flora': "Probiotic-rich foods:\n• Yogurt\n• Kefir\n• Sauerkraut\n• Kimchi\n• Miso\n• Tempeh\n• Look for 'live active cultures'",
+
+  // Special Cases
+  'pregnancy|prenatal': "Pregnancy nutrition focus:\n• Folate (leafy greens)\n• Iron\n• Calcium\n• DHA (fish/algae)\n• Small frequent meals\n• Avoid raw fish/undercooked meats",
+  'kids nutrition|child diet': "Kids' nutrition tips:\n• Colorful plates\n• Finger foods\n• Smoothies\n• Healthy dips (hummus, yogurt)\n• Lead by example\n• Limit juice/sweets",
+  'aging|senior nutrition': "Senior nutrition needs:\n• More protein\n• Vitamin D\n• Calcium\n• Fiber\n• Hydration\n• Smaller, frequent meals\n• Soft foods if needed",
+
+  // Default
+  'default': "I can help with:\n• Detailed food nutrition facts\n• Meal planning strategies\n• Diet comparisons\n• Cooking/prep tips\n• Supplement guidance\nAsk me anything more specific! 😊"
+};
+
+    for (const [keywords, response] of Object.entries(responses)) {
+      if (keywords.split('|').some(kw => lowerMsg.includes(kw))) {
+        return response;
+      }
+    }
+    
+    return responses.default;
+  }
+
+  // Auto-open for first-time users
+  if (!localStorage.getItem('chatbotShown')) {
+    setTimeout(() => {
+      chatbotToggle.classList.add('pulse');
+      localStorage.setItem('chatbotShown', 'true');
+    }, 10000);
+  }
+});
+
+
+
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = e.target.name.value;
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await res.json();
+      alert(data.message);
+      if (res.ok) {
+        document.getElementById('register-modal').classList.add('hidden');
+        document.getElementById('login-modal').classList.remove('hidden');
+      }
+    });
+
+    
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      alert(data.message);
+      if (res.ok) {
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+  <script src="assets/script.js"></script>
+  <footer class="footer-socials">
+    <div class="social-profiles">
+  <!-- Person 1 -->
+  <div class="person-profile">
+    <h4>Rajeswari Nag</h4>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/rajeswariinag.01?igsh=Y2U2cG5nMTJ5ZHc1" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/NagRajeswa97499?t=aEFTGRUKOtbH4fHNASAkkg&s=08" target="_blank"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.facebook.com/rajeswari.nag.100" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.linkedin.com/in/rajeswari-nag-b616b8270?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://youtube.com/@ruhihasan_rajeswarinag5623?si=uTYziKmWIwASAt4N" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+
+  <!-- Person 2 -->
+  <div class="person-profile">
+    <h4>Rudra Prasad Lugun</h4>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/forgotten_god_936?igsh=MTE2enBteGU2aDh6cw==" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/RudraOP5?t=lY4afZN0tb8TPhSFCzd83A&s=08" target="_blank"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.facebook.com/janesmith" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.linkedin.com/in/rudra-prasad-lugun-289642265?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.youtube.com/@janesmith" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+
+  <!-- Person 3 -->
+  <div class="person-profile">
+    <h4>Arati Sahoo</h4>
+    <div class="social-icons">
+      <a href="https://www.instagram.com/.arati.18?igsh=MWE1b29ld3VnYWI4aA==" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://x.com/AratiSa47335677?t=I1XHe8tjptaFE1rho1Eseg&s=08" target="_blank"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.facebook.com/alexjohnson" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.linkedin.com/in/arati-sahoo-482214319?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://www.youtube.com/@alexjohnson" target="_blank"><i class="fab fa-youtube"></i></a>
+    </div>
+  </div>
+</div>
+    <p class="footer-credit">© 2025 Nutri Mind. All rights reserved.</p>
+  </footer>
+</body>
+</html>

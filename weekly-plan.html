@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Meal Plan | Nutri Mind</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(270deg, #e0f7fa, #f1f8e9, #fff3e0);
+      background-size: 600% 600%;
+      animation: gradientBG 20s ease infinite;
+      color: #333;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body.dark {
+      background: linear-gradient(270deg, #0f2027, #203a43, #2c5364);
+      color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    h1 {
+      color: #0ea5e9;
+      margin: 0;
+    }
+    
+    .week-selector {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .week-nav {
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .week-nav:hover {
+      background: #0284c7;
+    }
+    
+    .week-range {
+      font-weight: bold;
+    }
+    
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .day-card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .day-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(0, 170, 255, 0.2);
+    }
+    
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .day-title {
+      font-weight: bold;
+      color: #0ea5e9;
+    }
+    
+    .meal {
+      margin-bottom: 15px;
+    }
+    
+    .meal-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .meal-items {
+      padding-left: 15px;
+    }
+    
+    .meal-item {
+      margin-bottom: 5px;
+    }
+    
+    .calories {
+      font-size: 0.9em;
+      color: #666;
+    }
+    
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .btn {
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    
+    .btn-primary {
+      background: #0ea5e9;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0284c7;
+    }
+    
+    .btn-secondary {
+      background: #eee;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #ddd;
+    }
+    
+    .total-calories {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    /* Dark mode styles */
+    body.dark .day-card {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #334155;
+    }
+    
+    body.dark .day-header {
+      border-bottom: 1px solid #475569;
+    }
+    
+    body.dark .calories {
+      color: #94a3b8;
+    }
+    
+    body.dark .btn-secondary {
+      background: #475569;
+      color: #f8fafc;
+    }
+
+    body.dark .btn-secondary:hover {
+      background: #3b4252;
+    }
+    
+    body.dark .total-calories {
+      border-top: 1px solid #475569;
+    }
+
+    .bmi-status {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(0, 170, 255, 0.1);
+      border-radius: 8px;
+    }
+
+    .dark-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      background: none;
+      border: none;
+      color: inherit;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .back-button {
+      background: #0ea5e9;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .back-button:hover {
+      background: #0284c7;
+    }
+
+    @media screen and (max-width: 768px) {
+      .days-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Dark Mode Toggle -->
+  <button class="dark-toggle" id="darkModeToggle">🌙</button>
+
+  <div class="container">
+    <header>
+      <button class="back-button" onclick="window.location.href='index.html'">← Back to Home</button>
+      <h1>Weekly Meal Plan</h1>
+    </header>
+
+    <!-- BMI Status Display -->
+    <div class="bmi-status" id="bmiStatus"></div>
+    
+    <div class="week-selector">
+      <button class="week-nav" id="prevWeek">← Previous</button>
+      <div class="week-range" id="weekRange">June 23 - June 29, 2025</div>
+      <button class="week-nav" id="nextWeek">Next →</button>
+    </div>
+    
+    <div class="days-grid" id="daysGrid">
+      <!-- Days will be populated by JavaScript -->
+      <div class="loading-message">Loading your weekly plan...</div>
+    </div>
+    
+    <div class="actions">
+      
+      <button class="btn btn-primary" id="generateNewBtn">Generate New Plan</button>
+    </div>
+  </div>
+
+  <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+  // Check authentication first
+  if (!checkAuth()) return;
+  
+  // Rest of your existing code...
+});
+    // Check if user is logged in
+    function checkAuth() {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        window.location.href = 'login.html?redirect=weekly-plan.html';
+        return false;
+      }
+      return true;
+    }
+
+    // Dark mode toggle
+    document.getElementById("darkModeToggle").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      localStorage.setItem('darkMode', document.body.classList.contains('dark') ? 'enabled' : 'disabled');
+    });
+
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      document.body.classList.add("dark");
+    }
+
+    // Current week tracking
+    let currentWeekStart = new Date();
+    currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay()); // Start of week
+    
+    // Format date as "Month Day, Year"
+    function formatDate(date) {
+      return date.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
+    }
+    
+    // Format date as "YYYY-MM-DD"
+    function formatDateForAPI(date) {
+      return date.toISOString().split('T')[0];
+    }
+    
+    // Update week display
+    function updateWeekDisplay() {
+      const weekEnd = new Date(currentWeekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
+      
+      document.getElementById('weekRange').textContent = 
+        `${formatDate(currentWeekStart)} - ${formatDate(weekEnd)}`;
+      
+      loadWeeklyPlan();
+    }
+    
+    // Navigation buttons
+    document.getElementById('prevWeek').addEventListener('click', () => {
+      currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+      updateWeekDisplay();
+    });
+    
+    document.getElementById('nextWeek').addEventListener('click', () => {
+      currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+      updateWeekDisplay();
+    });
+
+    // Update BMI status display
+    function updateBmiStatus() {
+      const bmi = localStorage.getItem('userBMI');
+      const bmiStatus = document.getElementById('bmiStatus');
+      
+      if (bmi) {
+        const category = localStorage.getItem('bmiCategory') || getBMICategory(bmi);
+        bmiStatus.innerHTML = `Your current BMI: <strong>${bmi}</strong> - <span style="color:${getBMIColor(bmi)}">${category}</span>`;
+      } else {
+        bmiStatus.innerHTML = `You haven't calculated your BMI yet. <a href="bmi.html" style="color:#00aaff;text-decoration:underline">Calculate BMI first</a> for personalized recommendations.`;
+      }
+    }
+
+    function getBMICategory(bmi) {
+      bmi = parseFloat(bmi);
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal weight';
+      if (bmi < 30) return 'Overweight';
+      return 'Obese';
+    }
+
+    function getBMIColor(bmi) {
+      bmi = parseFloat(bmi);
+      if (bmi < 18.5) return '#ff9800';
+      if (bmi < 25) return '#4caf50';
+      if (bmi < 30) return '#ff5722';
+      return '#f44336';
+    }
+    
+    // Load weekly plan
+    async function loadWeeklyPlan() {
+      if (!checkAuth()) return;
+      
+      const weekEnd = new Date(currentWeekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
+
+      const userId = localStorage.getItem('userId');
+      
+      try {
+        // Show loading state
+        document.getElementById('daysGrid').innerHTML = '<div class="loading-message">Loading your weekly plan...</div>';
+        
+        // In a real app, you would fetch from your API
+        // For now, we'll simulate with sample data
+        const samplePlan = generateSamplePlan();
+        displayWeeklyPlan(samplePlan);
+        
+      } catch (error) {
+        console.error('Error loading weekly plan:', error);
+        document.getElementById('daysGrid').innerHTML = '<div class="error-message">Failed to load weekly plan. Please try again.</div>';
+      }
+    }
+    
+    // Generate sample plan (replace with API call in production)
+    function generateSamplePlan() {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const mealTypes = ['Breakfast', 'Lunch', 'Dinner'];
+      
+      return days.map((day, index) => {
+        const date = new Date(currentWeekStart);
+        date.setDate(date.getDate() + index);
+        
+        const meals = mealTypes.map(type => {
+          return {
+            type: type,
+            items: getRandomMeal(type),
+            calories: Math.floor(Math.random() * 300) + 300
+          };
+        });
+        
+        const totalCalories = meals.reduce((sum, meal) => sum + meal.calories, 0);
+        
+        return {
+          dayName: day,
+          date: formatDate(date),
+          meals: meals,
+          totalCalories: totalCalories
+        };
+      });
+    }
+    
+    function getRandomMeal(type) {
+      const breakfasts = [
+        "Scrambled eggs with whole wheat toast",
+        "Greek yogurt with berries and granola",
+        "Oatmeal with banana and almonds",
+        "Avocado toast with poached eggs"
+      ];
+      
+      const lunches = [
+        "Grilled chicken salad with vinaigrette",
+        "Quinoa bowl with roasted vegetables",
+        "Turkey and avocado wrap",
+        "Lentil soup with whole grain bread"
+      ];
+      
+      const dinners = [
+        "Salmon with roasted sweet potatoes",
+        "Vegetable stir-fry with tofu",
+        "Grilled steak with mashed cauliflower",
+        "Chicken and vegetable kebabs"
+      ];
+      
+      if (type === 'Breakfast') return breakfasts[Math.floor(Math.random() * breakfasts.length)];
+      if (type === 'Lunch') return lunches[Math.floor(Math.random() * lunches.length)];
+      return dinners[Math.floor(Math.random() * dinners.length)];
+    }
+    
+    // Display weekly plan
+    function displayWeeklyPlan(plan) {
+      const daysGrid = document.getElementById('daysGrid');
+      daysGrid.innerHTML = '';
+      
+      plan.forEach(day => {
+        const dayCard = document.createElement('div');
+        dayCard.className = 'day-card';
+        
+        let mealsHTML = '';
+        day.meals.forEach(meal => {
+          mealsHTML += `
+            <div class="meal">
+              <div class="meal-title">${meal.type}</div>
+              <div class="meal-items">
+                <div class="meal-item">${meal.items}</div>
+              </div>
+              <div class="calories">${meal.calories} calories</div>
+            </div>
+          `;
+        });
+        
+        dayCard.innerHTML = `
+          <div class="day-header">
+            <div class="day-title">${day.dayName} (${day.date})</div>
+          </div>
+          ${mealsHTML}
+          <div class="total-calories">
+            <strong>Total Calories:</strong> ${day.totalCalories}
+          </div>
+        `;
+        
+        daysGrid.appendChild(dayCard);
+      });
+    }
+    
+    // Generate new weekly plan
+    document.getElementById('generateNewBtn').addEventListener('click', async () => {
+      if (!checkAuth()) return;
+      
+      const bmi = localStorage.getItem('userBMI');
+      if (!bmi) {
+        alert('Please calculate your BMI first from the BMI calculator page.');
+        window.location.href = 'bmi.html';
+        return;
+      }
+      
+      try {
+        // Show loading state
+        document.getElementById('daysGrid').innerHTML = '<div class="loading-message">Generating new plan...</div>';
+        
+        // In a real app, you would call your API here
+        // For now, we'll simulate with sample data
+        setTimeout(() => {
+          const newPlan = generateSamplePlan();
+          displayWeeklyPlan(newPlan);
+          alert('New weekly plan generated successfully!');
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Error generating weekly plan:', error);
+        alert('Failed to generate weekly plan. Please try again.');
+      }
+    });
+    
+    
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateBmiStatus();
+      updateWeekDisplay();
+    });
+  </script>
+</body>
+</html>

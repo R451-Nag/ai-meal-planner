@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <title>Select Meal Plan | Nutri Mind</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(270deg, #e0f7fa, #f1f8e9, #fff3e0);
+      background-size: 600% 600%;
+      animation: gradientBG 20s ease infinite;
+      color: #111;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body.dark {
+      background: linear-gradient(270deg, #0f2027, #203a43, #2c5364);
+      color: #f4f4f4;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .back-button {
+      background-color: #22c55e;
+      color: #fff;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .back-button:hover {
+      background-color: #16a34a;
+    }
+
+    .toggle-dark {
+      font-size: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-top: 10px;
+    }
+
+    p.description {
+      text-align: center;
+      max-width: 700px;
+      margin: 10px auto 30px;
+      font-size: 1.1rem;
+    }
+
+    h2.category-title {
+      margin: 40px 0 20px 30px;
+      font-size: 1.6rem;
+      color: #0ea5e9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+      padding: 0 30px;
+      margin-bottom: 50px;
+    }
+
+    .plan-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(0, 170, 255, 0.2);
+    }
+
+    .plan-card h3 {
+      font-size: 1.2rem;
+      margin: 10px 0 8px;
+    }
+
+    .plan-card p {
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+      min-height: 50px;
+    }
+
+    .plan-card button {
+      background-color: #0ea5e9;
+      color: #fff;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .plan-card button:hover {
+      background-color: #0284c7;
+    }
+
+    /* DARK MODE */
+    body.dark .plan-card {
+      background-color: #111827;
+      color: #f4f4f4;
+    }
+
+    body.dark .plan-card:hover {
+      box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+    }
+
+    body.dark h2.category-title {
+      color: #67e8f9;
+    }
+
+    .meal-plan-display {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .meal-plan-display h3 {
+    color: #0ea5e9;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .meal-item {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .total-calories {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #e3f2fd;
+    border-radius: 5px;
+  }
+  
+  /* Dark mode styles */
+  body.dark .meal-plan-display {
+    background-color: #1e293b;
+  }
+  
+  body.dark .meal-item {
+    background-color: #334155;
+    color: #f4f4f4;
+  }
+  
+  body.dark .total-calories {
+    background-color: #0c4b6e;
+    color: white;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <button class="back-button" onclick="location.href='index.html'">← Home</button>
+    <button class="toggle-dark" id="darkToggle">🌙</button>
+  </div>
+
+  <!-- Heading -->
+  <h1>🍽️ Choose Your Meal Plan</h1>
+  <p class="description">Explore meal plans tailored to your lifestyle, health condition, or goals. Select one that suits you best and begin your transformation!</p>
+
+  <!-- BMI Status Display -->
+  <div id="bmi-status" style="text-align: center; margin-bottom: 20px; font-weight: bold;"></div>
+
+  <!-- Meal Plan Display Container -->
+  <div id="meal-plan-container" class="meal-plan-display" style="display: none;"></div>
+
+  <div class="ai-suggestion-container position-relative mt-4">
+  <div class="ai-header bg-success bg-opacity-10 p-3 rounded-top d-flex align-items-center">
+  <div class="ai-icon bg-success text-white rounded-circle p-2 me-3">
+    <i class="bi bi-robot fs-4"></i>
+  </div>
+  <div>
+    <h5 class="mb-0 text-success">AI Nutritionist Suggests</h5>
+    <small class="text-muted" id="ai-bmi-display">Loading your BMI...</small>
+  </div>
+</div>
+
+  
+  <div class="ai-suggestion-body bg-white p-3 rounded-bottom shadow-sm">
+  <div class="row g-3">
+    <!-- Breakfast -->
+    <div class="col-md-6">
+      <div class="meal-card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card-header bg-warning bg-opacity-10 py-2 px-3">
+          <h6 class="mb-0 d-flex align-items-center">
+            <i class="bi bi-sunrise me-2 text-warning"></i>
+            Breakfast Options
+          </h6>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush breakfast-options">
+            <!-- Will be populated by JavaScript -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lunch -->
+    <div class="col-md-6">
+      <div class="meal-card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card-header bg-info bg-opacity-10 py-2 px-3">
+          <h6 class="mb-0 d-flex align-items-center">
+            <i class="bi bi-sun me-2 text-info"></i>
+            Lunch Options
+          </h6>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush lunch-options">
+            <!-- Will be populated by JavaScript -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dinner -->
+    <div class="col-md-6">
+      <div class="meal-card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card-header bg-primary bg-opacity-10 py-2 px-3">
+          <h6 class="mb-0 d-flex align-items-center">
+            <i class="bi bi-moon-stars me-2 text-primary"></i>
+            Dinner Options
+          </h6>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush dinner-options">
+            <!-- Will be populated by JavaScript -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Snacks -->
+    <div class="col-md-6">
+      <div class="meal-card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card-header bg-secondary bg-opacity-10 py-2 px-3">
+          <h6 class="mb-0 d-flex align-items-center">
+            <i class="bi bi-cup-hot me-2 text-secondary"></i>
+            Snack Options
+          </h6>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush snack-options">
+            <!-- Will be populated by JavaScript -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-3 d-flex justify-content-between align-items-center">
+    <small class="text-muted update-time">Updated just now based on your preferences</small>
+    <button class="btn btn-sm btn-outline-success" id="regenerate-btn">
+      <i class="bi bi-arrow-clockwise me-1"></i> Regenerate
+    </button>
+  </div>
+</div>
+  
+  <!-- Floating action button -->
+  <button class="ai-fab btn btn-success rounded-circle shadow position-absolute top-0 end-0 translate-middle">
+    <i class="bi bi-stars"></i>
+  </button>
+</div>
+
+  <!-- Special Purpose Diets -->
+  <h2 class="category-title">🌿 Special Purpose Diets</h2>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <div id="meal-plan-container"></div>
+      <h3>🥑 Keto Diet</h3>
+      <p>Low-carb, high-fat diet that helps with fat burning and energy balance.</p>
+      <button class="select-plan-btn" data-diet-type="Keto Diet">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🍗 Paleo Diet</h3>
+      <p>Focuses on whole foods like lean meats, fish, fruits, vegetables, and nuts.</p>
+      <button class="select-plan-btn" data-diet-type="Paleo Diet">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🍅 Mediterranean Diet</h3>
+      <p>Plant-based meals with whole grains, olive oil, and healthy fats.</p>
+      <button class="select-plan-btn" data-diet-type="Mediterranean Diet">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🧘 Mental Wellness Diet</h3>
+      <p>Supports brain health and reduces stress with mood-boosting nutrients.</p>
+      <button class="select-plan-btn" data-diet-type="Mental Wellness Diet">Select Plan</button>
+
+    </div>
+  </div>
+
+  <!-- Allergy-Friendly Plans -->
+  <h2 class="category-title">🌾 Allergy-Friendly Plans</h2>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <h3>🚫 Gluten-Free</h3>
+      <p>Eliminates gluten to support gut health and improve digestion.</p>
+      <button class="select-plan-btn" data-diet-type="Gluten-Free">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🥛 Lactose-Free</h3>
+      <p>Excludes dairy for those with lactose intolerance or dairy sensitivities.</p>
+      <button class="select-plan-btn" data-diet-type="Lactose-Free">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🥜 Nut-Free</h3>
+      <p>Designed for people with nut allergies, using safe, healthy alternatives.</p>
+      <button class="select-plan-btn" data-diet-type="Nut-Free">Select Plan</button>
+
+    </div>
+  </div>
+
+  <!-- Lifestyle / Ethical Plans -->
+  <h2 class="category-title">🌱 Lifestyle or Ethical Plans</h2>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <h3>🥦 Vegetarian</h3>
+      <p>No meat, includes plant-based proteins like tofu, lentils, and eggs.</p>
+      <button class="select-plan-btn" data-diet-type="Vegetarian">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🌽 Vegan</h3>
+      <p>Fully plant-based. No animal products or byproducts included.</p>
+      <button class="select-plan-btn" data-diet-type="Vegan">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🍖 Non-Vegetarian</h3>
+      <p>Balanced meals with meat, poultry, fish, and plant foods.</p>
+      <button class="select-plan-btn" data-diet-type="Non-Vegetarian">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🥕 Flexitarian</h3>
+      <p>Mostly vegetarian but occasionally includes meat or fish.</p>
+      <button class="select-plan-btn" data-diet-type="Flexitarian">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🐟 Pescatarian</h3>
+      <p>Vegetarian diet that includes seafood for added protein.</p>
+      <button class="select-plan-btn" data-diet-type="Pescatarian">Select Plan</button>
+
+    </div>
+  </div>
+
+  <!-- Health Condition Based Plans -->
+  <h2 class="category-title">❤️ Health Condition-Based</h2>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <h3>🩺 Diabetic-Friendly</h3>
+      <p>Regulates blood sugar with low-glycemic, high-fiber foods.</p>
+      <button class="select-plan-btn" data-diet-type="Diabetic-Friendly">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>💓 Heart-Healthy</h3>
+      <p>Rich in omega-3, fiber, and low in saturated fats and sodium.</p>
+      <button class="select-plan-btn" data-diet-type="Heart-Healthy">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🧬 PCOS/Thyroid-Friendly</h3>
+      <p>Hormone-balancing meals to support metabolism and energy.</p>
+      <button class="select-plan-btn" data-diet-type="PCOS/Thyroid-Friendly">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🧃 Renal Diet</h3>
+      <p>Low-sodium, low-potassium meals to support kidney function.</p>
+      <button class="select-plan-btn" data-diet-type="Renal Diet">Select Plan</button>
+    </div>
+  </div>
+
+  <!-- Goal-Oriented Plans -->
+  <h2 class="category-title">🎯 Goal-Oriented Plans</h2>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <h3>⚖️ Weight Loss</h3>
+      <p>Calorie-controlled meals to promote gradual and healthy fat loss.</p>
+      <button class="select-plan-btn" data-diet-type="Weight Loss">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>📈 Weight Gain</h3>
+      <p>High-calorie, nutrient-dense foods for healthy weight gain.</p>
+      <button class="select-plan-btn" data-diet-type="Weight Gain">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>💪 Muscle Building</h3>
+      <p>Protein-rich meals to build lean muscle mass effectively.</p>
+      <button class="select-plan-btn" data-diet-type="Muscle Building">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🏃 Athletic Performance</h3>
+      <p>Boosts endurance, stamina, and performance with complex carbs and proteins.</p>
+      <button class="select-plan-btn" data-diet-type="Athletic Performance">Select Plan</button>
+
+    </div>
+  </div>
+
+  <!-- Gym-Oriented -->
+  <h2 class="category-title">🏋️ Gym-Oriented Plans</h2>
+  <div class="plans-grid">
+    <div class="plan-card">
+      <h3>🔥 Pre Workout</h3>
+      <p>Meals to energize your workouts with healthy carbs and light proteins.</p>
+      <button class="select-plan-btn" data-diet-type="Pre Workout">Select Plan</button>
+
+    </div>
+    <div class="plan-card">
+      <h3>🧊 Post Workout</h3>
+      <p>Protein-rich and recovery-focused meals to rebuild muscles and refuel.</p>
+     <button class="select-plan-btn" data-diet-type="Post Workout">Select Plan</button>
+
+    </div>
+  </div>
+
+  <h3>AI-Powered Suggestions</h3>
+  <div class="ai-feedback">
+    <button class="thumbs-up" onclick="provideFeedback('positive')">👍</button>
+    <button class="thumbs-down" onclick="provideFeedback('negative')">👎</button>
+  </div>
+</div>
+
+
+  <!-- Script -->
+  <script>
+    const toggle = document.getElementById("darkToggle");
+    const body = document.body;
+
+    if (localStorage.getItem('darkMode') === 'enabled') {
+      body.classList.add('dark');
+    }
+
+    toggle.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      localStorage.setItem('darkMode', body.classList.contains('dark') ? 'enabled' : 'disabled');
+    });
+
+    async function provideFeedback(type) {
+    try {
+      const currentPlan = document.querySelector('.meal-plan-display h3')?.textContent;
+      if (!currentPlan) {
+        alert('Please select a meal plan first');
+        return;
+      }
+      
+      const response = await fetch('/ai/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: currentPlan,
+          feedback: type,
+          userId: localStorage.getItem('userId') || null
+        })
+      });
+      
+      if (response.ok) {
+        alert(`Thanks for your ${type} feedback!`);
+      }
+    } catch (error) {
+      console.error('Feedback error:', error);
+    }
+  }
+
+  // In your select-plan.html
+// Add this to your existing script
+async function loadAIRecommendation() {
+  const bmi = localStorage.getItem('userBMI');
+  const bmiCategory = localStorage.getItem('bmiCategory') || getBMICategory(bmi);
+  
+  if (!bmi) {
+    document.getElementById('ai-suggestion-container').style.display = 'none';
+    return;
+  }
+
+  try {
+    // Show loading state
+    document.querySelector('.ai-suggestion-body button').innerHTML = 
+      '<span class="spinner-border spinner-border-sm me-1"></span> Loading...';
+    
+    const response = await fetch('/ai/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        bmi,
+        bmiCategory,
+        goal: 'maintain' // Can make this dynamic based on user preference
+      })
+    });
+    
+    const data = await response.json();
+    
+    // Update breakfast options
+    const breakfastList = document.querySelector('.ai-suggestion-body .col-md-6:nth-child(1) ul');
+    breakfastList.innerHTML = data.breakfast.map(item => `
+      <li class="list-group-item d-flex align-items-center">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        ${item}
+      </li>
+    `).join('');
+    
+    // Update lunch options
+    const lunchList = document.querySelector('.ai-suggestion-body .col-md-6:nth-child(2) ul');
+    lunchList.innerHTML = data.lunch.map(item => `
+      <li class="list-group-item d-flex align-items-center">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        ${item}
+      </li>
+    `).join('');
+    
+    // Update dinner options
+    const dinnerList = document.querySelector('.ai-suggestion-body .col-md-6:nth-child(3) ul');
+    dinnerList.innerHTML = data.dinner.map(item => `
+      <li class="list-group-item d-flex align-items-center">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        ${item}
+      </li>
+    `).join('');
+    
+    // Update snack options
+    const snackList = document.querySelector('.ai-suggestion-body .col-md-6:nth-child(4) ul');
+    snackList.innerHTML = data.snacks.map(item => `
+      <li class="list-group-item d-flex align-items-center">
+        <i class="bi bi-check-circle-fill text-success me-2"></i>
+        ${item}
+      </li>
+    `).join('');
+
+  } catch (error) {
+    console.error('AI recommendation error:', error);
+    // Fallback to default suggestions
+    document.getElementById('ai-recommendation-text').textContent = 
+      "AI suggestions currently unavailable. Showing standard plans.";
+  } finally {
+    // Reset regenerate button
+    document.querySelector('.ai-suggestion-body button').innerHTML = 
+      '<i class="bi bi-arrow-clockwise me-1"></i> Regenerate';
+  }
+}
+
+// Function to update AI recommendations
+async function updateAIRecommendations() {
+  const bmi = localStorage.getItem('userBMI');
+  const bmiCategory = localStorage.getItem('bmiCategory') || getBMICategory(bmi);
+  const regenerateBtn = document.getElementById('regenerate-btn');
+  
+  if (!bmi) {
+    document.querySelector('.ai-suggestion-container').style.display = 'none';
+    return;
+  }
+
+  try {
+    // Show loading state
+    regenerateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Loading...';
+    regenerateBtn.disabled = true;
+
+    const response = await fetch('/ai/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        bmi,
+        bmiCategory,
+        regenerate: true // Flag to get new recommendations
+      })
+    });
+
+    const { breakfast, lunch, dinner, snacks } = await response.json();
+
+    // Update breakfast options
+    document.querySelector('.breakfast-options').innerHTML = 
+      breakfast.map(item => `
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+          ${item}
+        </li>
+      `).join('');
+
+    // Update lunch options
+    document.querySelector('.lunch-options').innerHTML = 
+      lunch.map(item => `
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+          ${item}
+        </li>
+      `).join('');
+
+    // Update dinner options
+    document.querySelector('.dinner-options').innerHTML = 
+      dinner.map(item => `
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+          ${item}
+        </li>
+      `).join('');
+
+    // Update snack options
+    document.querySelector('.snack-options').innerHTML = 
+      snacks.map(item => `
+        <li class="list-group-item d-flex align-items-center">
+          <i class="bi bi-check-circle-fill text-success me-2"></i>
+          ${item}
+        </li>
+      `).join('');
+
+    // Update timestamp
+    document.querySelector('.update-time').textContent = 
+      `Updated at ${new Date().toLocaleTimeString()} based on your BMI (${bmi})`;
+
+  } catch (error) {
+    console.error('Failed to load recommendations:', error);
+    alert('Failed to load new recommendations. Please try again.');
+  } finally {
+    // Reset button
+    regenerateBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Regenerate';
+    regenerateBtn.disabled = false;
+  }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  updateAIRecommendations();
+  
+  // Handle regenerate button click
+  document.getElementById('regenerate-btn').addEventListener('click', updateAIRecommendations);
+});
+
+// Helper function to get BMI category
+function getBMICategory(bmi) {
+  bmi = parseFloat(bmi);
+  if (bmi < 18.5) return 'Underweight';
+  if (bmi < 25) return 'Normal';
+  if (bmi < 30) return 'Overweight';
+  return 'Obese';
+}
+
+// Call this when BMI changes
+document.addEventListener('DOMContentLoaded', () => {
+  updateAIRecommendations();
+});
+
+// Make cards clickable
+document.querySelectorAll('.meal-card').forEach(card => {
+  card.addEventListener('click', function() {
+    const mealType = this.querySelector('h6').textContent.trim();
+    alert(`You selected a ${mealType} option!`);
+  });
+});
+
+// Regenerate button
+document.querySelector('.ai-suggestion-body button').addEventListener('click', function() {
+  const btn = this;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Thinking...';
+  btn.disabled = true;
+  
+  // Simulate AI processing
+  setTimeout(() => {
+    btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Regenerate';
+    btn.disabled = false;
+    
+    // In a real app, you would fetch new suggestions here
+    console.log('Generating new meal suggestions...');
+  }, 1500);
+});
+
+// Floating action button
+document.querySelector('.ai-fab').addEventListener('click', function() {
+  const container = document.querySelector('.ai-suggestion-container');
+  container.style.transform = 'translateY(-5px)';
+  setTimeout(() => {
+    container.style.transform = '';
+  }, 300);
+  
+  // Highlight all cards temporarily
+  document.querySelectorAll('.meal-card').forEach(card => {
+    card.style.boxShadow = '0 0 0 3px rgba(74, 222, 128, 0.3)';
+    setTimeout(() => {
+      card.style.boxShadow = '';
+    }, 1000);
+  });
+});
+
+async function provideFeedback(type) {
+  const currentPlan = document.querySelector('.meal-plan-display h3')?.textContent;
+  if (!currentPlan) {
+    alert('Please select a meal plan first');
+    return;
+  }
+  
+  try {
+    const response = await fetch('/ai/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        plan: currentPlan,
+        feedback: type,
+        userId: localStorage.getItem('userId') || null
+      })
+    });
+    
+    if (response.ok) {
+      alert(`Thanks for your ${type} feedback!`);
+    }
+  } catch (error) {
+    console.error('Feedback error:', error);
+  }
+}
+
+    // Check for BMI in localStorage
+    function checkBMIStatus() {
+  const bmi = localStorage.getItem('userBMI');
+  const bmiStatus = document.getElementById('bmi-status');
+  
+  if (bmi) {
+    const category = localStorage.getItem('bmiCategory') || getBMICategory(bmi);
+    bmiStatus.innerHTML = `Your current BMI: <strong>${bmi}</strong> - <span style="color:${getBMIColor(bmi)}">${category}</span>`;
+  } else {
+    bmiStatus.innerHTML = `You haven't calculated your BMI yet. <a href="bmi.html" style="color:#00aaff;text-decoration:underline">Calculate BMI first</a> for personalized recommendations.`;
+  }
+}
+    function getBMICategory(bmi) {
+      bmi = parseFloat(bmi);
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal weight';
+      if (bmi < 30) return 'Overweight';
+      return 'Obese';
+    }
+
+    function getBMIColor(bmi) {
+      bmi = parseFloat(bmi);
+      if (bmi < 18.5) return '#ff9800';
+      if (bmi < 25) return '#4caf50';
+      if (bmi < 30) return '#ff5722';
+      return '#f44336';
+    }
+
+    // Handle plan selection
+    document.querySelectorAll('.select-plan-btn').forEach(btn => {
+      btn.addEventListener('click', async function() {
+        const bmi = localStorage.getItem('userBMI');
+        if (!bmi) {
+          alert('Please calculate your BMI first from the BMI calculator page.');
+          window.location.href = 'bmi.html';
+          return;
+        }
+        
+        const dietType = this.dataset.dietType;
+        const container = document.getElementById('meal-plan-container');
+        
+        try {
+          // Show loading state
+          container.innerHTML = '<p>Loading meal plan...</p>';
+          container.style.display = 'block';
+
+          // Fetch meal plan
+          const response = await fetch(`/meal-plan?bmi=${bmi}&dietType=${encodeURIComponent(dietType)}`);
+          if (!response.ok) throw new Error('Network response was not ok');
+          
+          const data = await response.json();
+          displayMealPlan(data, dietType);
+
+          // Log the selection
+          const logResponse = await fetch('/api/log-selection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: dietType,
+          bmi: bmi,
+          userId: localStorage.getItem('userId') || null
+        })
+      });
+
+      if (!logResponse.ok) throw new Error('Failed to log selection');
+      
+    } catch (error) {
+      console.error('Error:', error);
+      container.innerHTML = `<p>Error loading meal plan. Please try again later.</p>`;
+      container.style.display = 'block';
+    }
+  });
+});
+
+async function logFood(food, calories, protein) {
+  try {
+    const userId = localStorage.getItem('userId');
+    const response = await fetch('/api/log-nutrition', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, food, calories, protein })
+    });
+    
+    if (response.ok) {
+      alert('Food logged successfully!');
+      loadDashboardData(); // Refresh dashboard
+    }
+  } catch (error) {
+    console.error('Error logging food:', error);
+  }
+}
+
+    // Enhanced meal plan display
+function displayMealPlan(data, dietType) {
+  const container = document.getElementById('meal-plan-container');
+  container.innerHTML = ''; 
+  
+  if (!data.meals || data.meals.length === 0) {
+    container.innerHTML = `<h3>${dietType} Meal Plan</h3>
+                         <p>No meal plan found for your BMI category (${data.bmiCategory}).</p>`;
+    container.style.display = 'block';
+    return;
+  }
+  
+  let html = `
+    <h3>${dietType} Meal Plan</h3>
+    <p>BMI Category: ${data.bmiCategory}</p>
+    <div class="meals-grid">
+  `;
+  
+  // Group meals by type
+  const mealGroups = {
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+    snack: []
+  };
+
+  data.meals.forEach(meal => {
+    mealGroups[meal.meal_type].push(meal);
+  });
+  
+  // Create sections for each meal type
+  for (const [mealType, meals] of Object.entries(mealGroups)) {
+    if (meals.length > 0) {
+      const mealTypeName = mealType.charAt(0).toUpperCase() + mealType.slice(1);
+      html += `<div class="meal-type-section">
+                <h4>${mealTypeName}</h4>`;
+      
+      meals.forEach(meal => {
+        html += `
+          <div class="meal-item">
+            <p><strong>${meal.food_items}</strong></p>
+            <p>Calories: ${meal.calories}</p>
+          </div>
+        `;
+      });
+      
+      html += `</div>`;
+    }
+  }
+  html += `
+    </div>
+    <div class="total-calories">
+      <strong>Total Daily Calories:</strong> ${data.totalCalories}
+    </div>
+  `;
+  
+  
+  container.innerHTML = html;
+  container.style.display = 'block';
+  
+  // Scroll to the meal plan
+  container.scrollIntoView({ behavior: 'smooth' });
+}
+
+    // Helper functions
+    function getBMICategory(bmi) {
+      bmi = parseFloat(bmi);
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal weight';
+      if (bmi < 30) return 'Overweight';
+      return 'Obese';
+    }
+
+    function getBMIColor(bmi) {
+      bmi = parseFloat(bmi);
+      if (bmi < 18.5) return '#ff9800';
+      if (bmi < 25) return '#4caf50';
+      if (bmi < 30) return '#ff5722';
+      return '#f44336';
+    }
+
+    // Check BMI status when page loads
+    document.addEventListener('DOMContentLoaded', checkBMIStatus);
+
+    // Update AI Nutritionist BMI display
+function updateAIBmiDisplay() {
+  const bmi = localStorage.getItem('userBMI');
+  const bmiCategory = localStorage.getItem('bmiCategory') || getBMICategory(bmi);
+  const bmiDisplay = document.getElementById('ai-bmi-display');
+  
+  if (bmi && bmiDisplay) {
+    bmiDisplay.textContent = `Personalized for your BMI ${bmi} (${bmiCategory})`;
+  } else {
+    bmiDisplay.textContent = 'Personalized recommendations';
+  }
+}
+
+// Call this when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  checkBMIStatus();
+  updateAIBmiDisplay(); // Add this line
+});
+    
+  </script>
+</body>
+</html>
